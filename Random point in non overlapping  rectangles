@@ -1,0 +1,35 @@
+class Solution:
+
+    def __init__(self, rects: List[List[int]]):
+        self.rects = rects
+        self.cumulative_areas = []
+        area_sum = 0
+
+        for x1, y1, x2, y2 in rects:
+            area = (x2 - x1 + 1) * (y2 - y1 + 1)
+            area_sum += area
+            self.cumulative_areas.append(area_sum)
+
+    def pick(self) -> List[int]:
+        
+        rand_area = random.randint(1, self.cumulative_areas[-1])
+        rect_index = self._binary_search(rand_area)
+        x1, y1, x2, y2 = self.rects[rect_index]
+        x = random.randint(x1, x2)
+        y = random.randint(y1, y2)
+
+        return [x, y]
+
+    def _binary_search(self, target: int) -> int:
+        """Helper function to find the rectangle index using binary search."""
+        low, high = 0, len(self.cumulative_areas) - 1
+        while low < high:
+            mid = (low + high) // 2
+            if self.cumulative_areas[mid] < target:
+                low = mid + 1
+            else:
+                high = mid
+        return low
+        
+
+    
