@@ -1,0 +1,33 @@
+class Solution:
+    def minimumCost(self, source: str, target: str, original: List[str], changed: List[str], cost: List[int]) -> int:
+        INF = sys.maxsize
+        cost_map = {chr(i): {chr(j): INF for j in range(97, 123)} for i in range(97, 123)}
+        
+        
+        for c in range(97, 123):
+            cost_map[chr(c)][chr(c)] = 0
+        
+        
+        for i in range(len(original)):
+            cost_map[original[i]][changed[i]] = min(cost_map[original[i]][changed[i]], cost[i])
+        
+        
+        for k in range(97, 123):
+            for i in range(97, 123):
+                for j in range(97, 123):
+                    cost_map[chr(i)][chr(j)] = min(cost_map[chr(i)][chr(j)], cost_map[chr(i)][chr(k)] + cost_map[chr(k)][chr(j)])
+        
+        total_cost = 0
+        
+       
+        for i in range(len(source)):
+            src_char = source[i]
+            tgt_char = target[i]
+            conversion_cost = cost_map[src_char][tgt_char]
+            if conversion_cost == INF:
+                return -1
+            
+            total_cost += conversion_cost
+        
+        return total_cost
+        
