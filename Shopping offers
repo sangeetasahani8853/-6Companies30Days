@@ -1,0 +1,22 @@
+class Solution:
+    def shoppingOffers(self, price: List[int], special: List[List[int]], needs: List[int]) -> int:
+        memo = {}
+
+        def dfs(needs):
+            if tuple(needs) in memo:
+                return memo[tuple(needs)]
+            if all(x == 0 for x in needs):
+                return 0
+            min_cost = sum(needs[i] * price[i] for i in range(len(needs)))
+            for offer in special:
+                new_needs = []
+                for i in range(len(needs)):
+                    if needs[i] < offer[i]:
+                        break
+                    new_needs.append(needs[i] - offer[i])
+                else:
+                    min_cost = min(min_cost, offer[-1] + dfs(new_needs))
+            memo[tuple(needs)] = min_cost
+            return min_cost
+        return dfs(needs)
+        
