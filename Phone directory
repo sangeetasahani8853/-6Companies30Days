@@ -1,0 +1,46 @@
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end_of_word = False
+        self.words = set()  # To store words passing through this node
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+    
+    def insert(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+            node.words.add(word)  # Add the word at each node
+        node.is_end_of_word = True
+    
+    def search_prefix(self, prefix):
+        node = self.root
+        for char in prefix:
+            if char not in node.children:
+                return []
+            node = node.children[char]
+        return sorted(node.words)  # Return sorted list of words for the prefix
+
+class Solution:
+    def displayContacts(self, n, contact, s):
+        # Create a Trie and insert all contacts
+        trie = Trie()
+        for word in set(contact):  # Use set to avoid duplicate contacts
+            trie.insert(word)
+        
+        # For each prefix of the query string, search in the Trie
+        result = []
+        prefix = ""
+        for char in s:
+            prefix += char
+            matched_words = trie.search_prefix(prefix)
+            if matched_words:
+                result.append(matched_words)
+            else:
+                result.append(["0"])
+        
+        return result
