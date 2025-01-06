@@ -1,0 +1,21 @@
+class Solution:
+    def maxProfit(self, k: int, prices: List[int]) -> int:
+        if not prices:
+            return 0
+        
+        n = len(prices)
+        
+        # If k is larger than the maximum possible transactions
+        if k >= n // 2:
+            return sum(max(prices[i + 1] - prices[i], 0) for i in range(n - 1))
+        
+        # DP array
+        dp = [[0] * (k + 1) for _ in range(n)]
+        
+        for t in range(1, k + 1):
+            max_diff = -prices[0]
+            for i in range(1, n):
+                dp[i][t] = max(dp[i - 1][t], prices[i] + max_diff)
+                max_diff = max(max_diff, dp[i - 1][t - 1] - prices[i])
+        
+        return dp[-1][k]
