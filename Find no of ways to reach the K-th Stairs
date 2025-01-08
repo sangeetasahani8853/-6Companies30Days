@@ -1,0 +1,46 @@
+class Solution:
+    def waysToReachStair(self, k: int) -> int:
+        mod = 10**9 + 7
+
+        # Base case for k = 0
+        if k == 0:
+            return 2
+
+        # Dictionary to memoize results
+        memo = {}
+
+        def dfs(stair, jump, can_go_down):
+            # If we've already computed this state, return it
+            if (stair, jump, can_go_down) in memo:
+                return memo[(stair, jump, can_go_down)]
+
+            # If we have reached stair k, count this as one way
+            if stair == k:
+                ways = 1
+
+                # If we can go down, account for cycles (returning back to k)
+                if can_go_down and stair > 0:
+                    ways += dfs(stair - 1, jump, False) % mod
+
+                memo[(stair, jump, can_go_down)] = ways % mod
+                return ways % mod
+
+            ways = 0
+
+            # Option 1: Go up to stair stair + 2^jump
+            next_stair = stair + (1 << jump)
+            ways += dfs(next_stair, jump + 1, True) % mod
+
+            # Option 2: Go down to stair - 1 (only if allowed)
+            if can_go_down and stair > 0:
+                ways += dfs(stair - 1, jump, False) % mod
+
+            # Store the result modulo mod
+            memo[(stair, jump, can_go_down)] = ways % mod
+            return memo[(stair, jump, can_go_down)]
+
+        # Start DFS from stair 1, with jump 0, and initially can go down
+        return dfs(1, 0, True) % mod
+
+       
+        
