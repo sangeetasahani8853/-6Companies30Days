@@ -1,0 +1,65 @@
+**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+#include <string>
+#include <sstream>
+#include <queue>
+  // Include the TreeNode definition from the header file
+
+using namespace std;
+
+class Codec {
+public:
+
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        if (!root) return "#";
+        
+        stringstream ss;
+        serializeHelper(root, ss);
+        return ss.str();
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        stringstream ss(data);
+        return deserializeHelper(ss);
+    }
+
+private:
+    // Helper function for serialization
+    void serializeHelper(TreeNode* root, stringstream& ss) {
+        if (!root) {
+            ss << "#" << ",";  // "#" represents null
+            return;
+        }
+        
+        ss << root->val << ",";  // Serialize the current node's value
+        serializeHelper(root->left, ss);  // Recursively serialize left subtree
+        serializeHelper(root->right, ss); // Recursively serialize right subtree
+    }
+
+    // Helper function for deserialization
+    TreeNode* deserializeHelper(stringstream& ss) {
+        string val;
+        getline(ss, val, ',');  // Read the next token
+        
+        if (val == "#") {
+            return nullptr;  // Null node
+        }
+        
+        TreeNode* node = new TreeNode(stoi(val));  // Create a new node
+        node->left = deserializeHelper(ss);  // Recursively deserialize left subtree
+        node->right = deserializeHelper(ss); // Recursively deserialize right subtree
+        return node;
+    }
+};
+// Your Codec object will be instantiated and called as such:
+// Codec ser, deser;
+// TreeNode* ans = deser.deserialize(ser.serialize(root));
