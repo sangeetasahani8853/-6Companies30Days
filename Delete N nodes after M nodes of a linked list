@@ -1,0 +1,35 @@
+class Solution {
+  public:
+    Node* linkdelete(Node* head, int n, int m) {
+        // Start with the head node.
+        Node* current = head;
+        
+        while (current != NULL) {
+            // Skip m nodes.
+            for (int i = 1; i < m && current != NULL; i++) {
+                current = current->next;
+            }
+            
+            // If there are no more nodes to process, break the loop.
+            if (current == NULL) {
+                break;
+            }
+            
+            // Now, current is at the m-th node, delete n nodes after it.
+            Node* temp = current->next;
+            for (int i = 0; i < n && temp != NULL; i++) {
+                Node* nodeToDelete = temp;
+                temp = temp->next;
+                delete nodeToDelete;
+            }
+            
+            // Link the m-th node to the (m+n+1)-th node.
+            current->next = temp;
+            
+            // Move the current pointer to the next node after the deleted nodes.
+            current = temp;
+        }
+        
+        return head;
+    }
+};
