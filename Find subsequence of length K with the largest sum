@@ -1,0 +1,13 @@
+class Solution:
+    def maxSubsequence(self, nums: List[int], k: int) -> List[int]:
+        indexed_nums = [(num, idx) for idx, num in enumerate(nums)]
+        
+        # Find the largest k elements based on value
+        largest_k = sorted(indexed_nums, key=lambda x: x[0], reverse=True)[:k]
+        
+        # Sort these k elements by their original indices
+        largest_k_sorted = sorted(largest_k, key=lambda x: x[1])
+        
+        # Extract the values to form the subsequence
+        result = [num for num, idx in largest_k_sorted]
+        return result
