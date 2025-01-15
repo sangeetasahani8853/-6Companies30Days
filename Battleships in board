@@ -1,0 +1,13 @@
+class Solution:
+    def countBattleships(self, board: List[List[str]]) -> int:
+        count = 0  # Initialize the counter for battleships
+        
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                # Check if the current cell is 'X'
+                if board[i][j] == 'X':
+                    # Ensure it is the start of a new battleship
+                    if (i == 0 or board[i - 1][j] != 'X') and (j == 0 or board[i][j - 1] != 'X'):
+                        count += 1
+        
+        return count
