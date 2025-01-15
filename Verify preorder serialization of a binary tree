@@ -1,0 +1,22 @@
+class Solution:
+    def isValidSerialization(self, preorder: str) -> bool:
+        # Split the input string by commas
+        nodes = preorder.split(',')
+        
+        # Initialize a counter for available slots
+        slots = 1
+        
+        for node in nodes:
+            # Decrement one slot as a node is being used
+            slots -= 1
+            
+            # If at any point slots are negative, the serialization is invalid
+            if slots < 0:
+                return False
+            
+            # Non-null nodes add two more slots (left and right children)
+            if node != '#':
+                slots += 2
+        
+        # All slots should be used up
+        return slots == 0
