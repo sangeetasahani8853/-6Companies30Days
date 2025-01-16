@@ -1,0 +1,31 @@
+class Solution:
+    def squareFreeSubsets(self, nums: List[int]) -> int:
+        MOD = 10**9 + 7
+
+        # Prime factor bitmask for numbers from 1 to 30
+        prime_mask = [0] * 31
+        primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+
+        for i in range(1, 31):
+            for j, p in enumerate(primes):
+                if i % (p * p) == 0:
+                    prime_mask[i] = -1  # Not square-free
+                    break
+                if i % p == 0:
+                    prime_mask[i] |= (1 << j)
+
+        # Filter out non-square-free numbers
+        nums = [x for x in nums if prime_mask[x] != -1]
+
+        # DP to count square-free subsets
+        dp = [0] * (1 << len(primes))
+        dp[0] = 1
+
+        for num in nums:
+            mask = prime_mask[num]
+            for state in range((1 << len(primes)) - 1, -1, -1):
+                if state & mask == 0:  # No conflict with current subset
+                    dp[state | mask] = (dp[state | mask] + dp[state]) % MOD
+
+        # Exclude the empty subset
+        return (sum(dp) - 1) % MOD
