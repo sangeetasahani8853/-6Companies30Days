@@ -1,0 +1,26 @@
+class Solution:
+    def minExtraChar(self, s: str, dictionary: List[str]) -> int:
+        word_set = set(dictionary)
+        
+        # Length of the input string
+        n = len(s)
+
+        # Initialize a DP array where dp[i] represents the minimum extra characters
+        # from index i to the end of the string
+        dp = [float('inf')] * (n + 1)
+
+        # Base case: no extra characters if we are past the end of the string
+        dp[n] = 0
+
+        # Fill the DP array from right to left
+        for i in range(n - 1, -1, -1):
+            # Initialize dp[i] as if we skip the current character
+            dp[i] = dp[i + 1] + 1
+
+            # Check all possible substrings starting from index i
+            for j in range(i, n):
+                if s[i:j + 1] in word_set:
+                    dp[i] = min(dp[i], dp[j + 1])
+
+        # The answer is stored in dp[0]
+        return dp[0]
