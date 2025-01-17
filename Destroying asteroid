@@ -1,0 +1,13 @@
+class Solution:
+    def asteroidsDestroyed(self, mass: int, asteroids: List[int]) -> bool:
+        asteroids.sort()
+        
+        # Iterate through the sorted list of asteroids
+        for asteroid in asteroids:
+            # Check if the planet can destroy the asteroid
+            if mass >= asteroid:
+                mass += asteroid  # Destroy the asteroid and gain its mass
+            else:
+                return False  # The planet cannot destroy this asteroid
+        
+        return True  # All asteroids were destroyed
