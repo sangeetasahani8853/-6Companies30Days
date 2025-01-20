@@ -1,0 +1,27 @@
+class Solution:
+    def stoneGameVI(self, aliceValues: List[int], bobValues: List[int]) -> int:
+        stones = []
+        for i in range(len(aliceValues)):
+            stones.append((aliceValues[i] + bobValues[i], aliceValues[i], bobValues[i]))
+        
+        # Sort the stones by combined value (descending order)
+        stones.sort(reverse=True, key=lambda x: x[0])
+        
+        # Initialize the scores for Alice and Bob
+        aliceScore = 0
+        bobScore = 0
+        
+        # Simulate the game
+        for i, (combinedValue, aliceValue, bobValue) in enumerate(stones):
+            if i % 2 == 0:  # Alice's turn (even index in sorted list)
+                aliceScore += aliceValue
+            else:  # Bob's turn (odd index in sorted list)
+                bobScore += bobValue
+        
+        # Determine the winner
+        if aliceScore > bobScore:
+            return 1  # Alice wins
+        elif bobScore > aliceScore:
+            return -1  # Bob wins
+        else:
+            return 0  # Draw
