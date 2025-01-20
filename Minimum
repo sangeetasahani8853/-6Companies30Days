@@ -1,0 +1,22 @@
+class Solution:
+    def maximumProduct(self, nums: List[int], k: int) -> int:
+        MOD = 10**9 + 7
+        
+        # Create a min-heap from the nums array
+        heapq.heapify(nums)
+        
+        # Perform k operations
+        for _ in range(k):
+            # Pop the smallest element
+            smallest = heapq.heappop(nums)
+            # Increment it by 1
+            smallest += 1
+            # Push it back into the heap
+            heapq.heappush(nums, smallest)
+        
+        # Calculate the product of all elements in the heap
+        product = 1
+        for num in nums:
+            product = (product * num) % MOD
+        
+        return product
