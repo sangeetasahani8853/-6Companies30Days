@@ -1,0 +1,59 @@
+class Solution:
+    def countSubgraphsForEachDiameter(self, n: int, edges: List[List[int]]) -> List[int]:
+        adj = [[] for _ in range(n)]
+        for u, v in edges:
+            adj[u - 1].append(v - 1)
+            adj[v - 1].append(u - 1)
+
+        # Function to perform BFS and return the farthest node and the distance
+        def bfs(start: int, nodes_in_subtree: set) -> (int, int):
+            visited = [-1] * n
+            visited[start] = 0
+            q = deque([start])
+            farthest_node = start
+            max_distance = 0
+            
+            while q:
+                node = q.popleft()
+                for neighbor in adj[node]:
+                    if visited[neighbor] == -1 and neighbor in nodes_in_subtree:
+                        visited[neighbor] = visited[node] + 1
+                        q.append(neighbor)
+                        if visited[neighbor] > max_distance:
+                            max_distance = visited[neighbor]
+                            farthest_node = neighbor
+            return farthest_node, max_distance
+
+        # Function to calculate the diameter of a subtree
+        def get_diameter(nodes_in_subtree: set) -> int:
+            # Start BFS from any node in the subtree (we can pick the first one)
+            start_node = next(iter(nodes_in_subtree))
+            farthest_node, _ = bfs(start_node, nodes_in_subtree)
+            # Now, perform BFS from the farthest node found to determine the maximum distance
+            _, diameter = bfs(farthest_node, nodes_in_subtree)
+            return diameter
+
+        # List to store the count of subtrees for each diameter
+        count = [0] * (n - 1)
+
+        # Generate all subsets of nodes and check their diameters
+        for mask in range(1, 1 << n):
+            nodes_in_subtree = {i for i in range(n) if (mask & (1 << i)) != 0}
+            # Check if the nodes form a connected component
+            visited = [-1] * n
+            # Perform DFS or BFS to check connectivity
+            stack = [next(iter(nodes_in_subtree))]
+            visited[stack[0]] = 0
+            while stack:
+                node = stack.pop()
+                for neighbor in adj[node]:
+                    if neighbor in nodes_in_subtree and visited[neighbor] == -1:
+                        visited[neighbor] = visited[node] + 1
+                        stack.append(neighbor)
+            # If all nodes in the subtree are connected, calculate the diameter
+            if all(visited[i] != -1 for i in nodes_in_subtree):
+                diameter = get_diameter(nodes_in_subtree)
+                if diameter > 0 and diameter < n:
+                    count[diameter - 1] += 1
+        
+        return count
