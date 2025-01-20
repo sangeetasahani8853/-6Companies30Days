@@ -1,0 +1,23 @@
+class Solution:
+    def maxEnvelopes(self, envelopes: List[List[int]]) -> int:
+        envelopes.sort(key=lambda x: (x[0], -x[1]))
+        
+        # List to store the heights for the LIS
+        lis = []
+        
+        # Process each envelope's height
+        for _, h in envelopes:
+            # Find the position where the current height can be placed in the LIS
+            pos = bisect.bisect_left(lis, h)
+            
+            # If pos is equal to the length of lis, it means the height is greater than
+            # any existing height in the lis and can extend the subsequence
+            if pos == len(lis):
+                lis.append(h)
+            else:
+                # Otherwise, replace the element at pos with the current height
+                lis[pos] = h
+        
+        # The length of the lis list is the maximum number of envelopes that can be Russian-dolled
+        return len(lis)
+        
