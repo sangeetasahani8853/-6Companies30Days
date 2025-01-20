@@ -1,0 +1,15 @@
+class Solution:
+    def smallestTrimmedNumbers(self, nums: List[str], queries: List[List[int]]) -> List[int]:
+        result = []
+        
+        for ki, trimi in queries:
+            # Step 1: Trim each number to the last 'trimi' digits
+            trimmed_nums = [(num[-trimi:], idx) for idx, num in enumerate(nums)]
+            
+            # Step 2: Sort the trimmed numbers by their value (lexicographically) and by their original index
+            trimmed_nums.sort(key=lambda x: (x[0], x[1]))
+            
+            # Step 3: Retrieve the index of the k-th smallest (1-based index)
+            result.append(trimmed_nums[ki - 1][1])
+        
+        return result
