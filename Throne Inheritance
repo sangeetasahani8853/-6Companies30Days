@@ -1,0 +1,40 @@
+class ThroneInheritance:
+
+    def __init__(self, kingName: str):
+        self.king = kingName
+        self.family_tree = {kingName: []}  # Family tree represented as an adjacency list
+        self.deceased = set()  # Set to track deceased members
+        
+
+    def birth(self, parentName: str, childName: str) -> None:
+        if parentName not in self.family_tree:
+            self.family_tree[parentName] = []
+        self.family_tree[parentName].append(childName)
+        self.family_tree[childName] = []  # Initialize the child in the tree
+
+        
+
+    def death(self, name: str) -> None:
+        self.deceased.add(name)
+        
+
+    def getInheritanceOrder(self) -> List[str]:
+        order = []
+
+        def dfs(name):
+            if name not in self.deceased:
+                order.append(name)
+            for child in self.family_tree.get(name, []):
+                dfs(child)
+
+        dfs(self.king)
+        return order
+
+        
+
+
+# Your ThroneInheritance object will be instantiated and called as such:
+# obj = ThroneInheritance(kingName)
+# obj.birth(parentName,childName)
+# obj.death(name)
+# param_3 = obj.getInheritanceOrder()
