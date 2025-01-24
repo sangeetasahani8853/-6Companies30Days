@@ -1,0 +1,25 @@
+class Solution:
+    def beautifulIndices(self, s: str, a: str, b: str, k: int) -> List[int]:
+        a_indices = []
+        b_indices = []
+        
+        # Find all indices where substring 'a' occurs
+        for i in range(len(s) - len(a) + 1):
+            if s[i:i+len(a)] == a:
+                a_indices.append(i)
+        
+        # Find all indices where substring 'b' occurs
+        for j in range(len(s) - len(b) + 1):
+            if s[j:j+len(b)] == b:
+                b_indices.append(j)
+        
+        beautiful_indices = []
+        
+        # For each index i in a_indices, check if there exists a valid j in b_indices
+        for i in a_indices:
+            for j in b_indices:
+                if abs(i - j) <= k:
+                    beautiful_indices.append(i)
+                    break  # No need to check further j's once we find a valid j
+        
+        return sorted(beautiful_indices)
