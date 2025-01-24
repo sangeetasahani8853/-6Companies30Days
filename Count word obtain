@@ -1,0 +1,21 @@
+class Solution:
+    def wordCount(self, startWords: List[str], targetWords: List[str]) -> int:
+        # Step 1: Store all startWords as sorted sets of characters
+        start_sets = set()
+        for word in startWords:
+            start_sets.add(frozenset(word))  # Use frozenset to make it hashable
+        
+        # Step 2: For each targetWord, check if it's possible to form it
+        count = 0
+        for target in targetWords:
+            target_set = frozenset(target)
+            # Try adding one character to any start word's set and check if it matches
+            for i in range(len(target)):
+                # Remove one character from target_set
+                new_set = target_set - frozenset(target[i])
+                if new_set in start_sets:
+                    count += 1
+                    break  # Found a valid start word, no need to check further
+        
+        return count
+        
